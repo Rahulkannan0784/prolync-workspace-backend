@@ -423,8 +423,8 @@ export const importQuestions = async (req, res) => { // Expects array of questio
 
                 // 2. Insert Question
                 const [qRes] = await db.query(`
-                    INSERT INTO questions (title, description, difficulty, topic_id, difficulty_normalized, time_limit, memory_limit, status, constraints, category, kit_id, is_active)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE)
+                    INSERT INTO questions (title, description, difficulty, topic_id, difficulty_normalized, time_limit, memory_limit, status, constraints, kit_id, is_active)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, TRUE)
                  `, [
                     item.title,
                     item.description || "",
@@ -435,7 +435,6 @@ export const importQuestions = async (req, res) => { // Expects array of questio
                     item.memory_limit || 256,
                     item.status || 'Draft',
                     JSON.stringify(item.constraints || []),
-                    item.category || 'DSA',
                     item.kit_id || null]
                 );
 
@@ -516,10 +515,6 @@ export const getUserCodingStats = async (req, res) => {
             }
         }
 
-        // 4. Kits & Scenarios
-        const [kitRows] = await db.query("SELECT COUNT(DISTINCT context_id) as count FROM submissions WHERE user_id = ? AND context_type = 'kit'", [userId]);
-        const [scenarioRows] = await db.query("SELECT COUNT(DISTINCT context_id) as count FROM submissions WHERE user_id = ? AND context_type = 'scenario'", [userId]);
-
         // 3. Badges (Auto-award based on stats to sync legacy/manual progress)
         try {
             const checks = [
@@ -544,6 +539,10 @@ export const getUserCodingStats = async (req, res) => {
 
         const [badgeRows] = await db.query('SELECT COUNT(*) as count FROM user_badges WHERE user_id = ?', [userId]);
         const badges = badgeRows[0].count;
+
+        // 4. Kits & Scenarios
+        const [kitRows] = await db.query("SELECT COUNT(DISTINCT context_id) as count FROM submissions WHERE user_id = ? AND context_type = 'kit'", [userId]);
+        const [scenarioRows] = await db.query("SELECT COUNT(DISTINCT context_id) as count FROM submissions WHERE user_id = ? AND context_type = 'scenario'", [userId]);
 
         // 5. Languages Used Breakdown
         const [langRows] = await db.query(`
@@ -897,54 +896,5 @@ export const deleteKit = async (req, res) => {
     } catch (error) {
         console.error("Error deleting kit:", error);
         res.status(500).json({ message: "Server error" });
-    }
-};
-
-// @desc    Get Problem of the Day (Cycling through all questions)
-// @route   GET /api/coding/daily-challenge
-export const getDailyChallenge = async (req, res) => {
-    try {
-        // 1. Get total count of Published & Published questions
-        const [countRow] = await db.query(`
-            SELECT COUNT(*) as total 
-            FROM questions 
-            WHERE status = 'Published' AND is_active = TRUE
-        `);
-        
-        const N = countRow[0].total;
-        if (N === 0) return res.status(404).json({ message: "No published questions available" });
-
-        // 2. Calculate Days since a fixed date (Epoch: 2024-01-01)
-        const epoch = new Date('2024-01-01');
-        const today = new Date();
-        const diffInMs = today - epoch;
-        const D = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-
-        // 3. Cycling Logic: Index = Days % Total
-        const targetOffset = D % N;
-
-        // 4. Fetch the question at that offset
-        // Selection is stable because we order by ID
-        const [qRows] = await db.query(`
-            SELECT id, title, difficulty, topic_id, description, time_limit, memory_limit, acceptance_rate, category
-            FROM questions 
-            WHERE status = 'Published' AND is_active = TRUE
-            ORDER BY id ASC
-            LIMIT 1 OFFSET ?
-        `, [targetOffset]);
-
-        if (qRows.length === 0) return res.status(404).json({ message: "Problem of the day not found" });
-
-        // Enrich with topic name
-        const [topicRows] = await db.query('SELECT name FROM topics WHERE id = ?', [qRows[0].topic_id]);
-        
-        res.json({
-            ...qRows[0],
-            topic: topicRows[0]?.name || 'General'
-        });
-
-    } catch (error) {
-        console.error('Error fetching daily challenge:', error);
-        res.status(500).json({ message: 'Error fetching daily challenge' });
     }
 };

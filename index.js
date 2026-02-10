@@ -158,6 +158,9 @@ const fixSchema = async () => {
     try { await db.query("ALTER TABLE enrollments ADD COLUMN progress INT DEFAULT 0"); } catch (e) { }
     try { await db.query("ALTER TABLE enrollments ADD COLUMN completed BOOLEAN DEFAULT FALSE"); } catch (e) { }
 
+    // User onboarding completion fix
+    try { await db.query("ALTER TABLE users ADD COLUMN onboarding_completed BOOLEAN DEFAULT FALSE"); } catch (e) { }
+
     console.log("Schema Fix Done.");
   } catch (e) {
     console.error("Schema Fix Failed:", e);

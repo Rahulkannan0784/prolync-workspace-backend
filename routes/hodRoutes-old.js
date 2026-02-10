@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { createHOD, getAllHODs, updateHODStatus, deleteHOD, getHODStudents, removeStudentFromHOD, resetHODPassword } from '../controllers/hodController.js';
+import { createHOD, getAllHODs, updateHODStatus, deleteHOD, getHODStudents, removeStudentFromHOD } from '../controllers/hodController.js';
 import {
     getOverview,
     getActivityTrends,
@@ -21,7 +21,6 @@ const router = express.Router();
 router.post('/', createHOD);
 router.get('/', getAllHODs);
 router.patch('/:id/status', updateHODStatus);
-router.post('/:id/reset-password', resetHODPassword);
 router.get('/:id/students', getHODStudents);
 router.delete('/:id/students/:studentId', removeStudentFromHOD);
 router.delete('/:id', deleteHOD);

@@ -1,7 +1,6 @@
 
 import db from '../config/db.js';
 import bcrypt from 'bcryptjs';
-import { validatePassword } from '../utils/validation.js';
 
 // Create HOD
 export const createHOD = async (req, res) => {
@@ -10,12 +9,6 @@ export const createHOD = async (req, res) => {
 
         if (!name || !email || !password || !college || !department) {
             return res.status(400).json({ message: "All fields are required" });
-        }
-
-        // Validate Password Strength
-        const passwordValidation = validatePassword(password);
-        if (!passwordValidation.isValid) {
-            return res.status(400).json({ message: passwordValidation.message });
         }
 
         // Check Exists in all primary tables (users, hod, admin)
@@ -96,33 +89,6 @@ export const deleteHOD = async (req, res) => {
         res.status(500).json({ message: "Server error: " + error.message });
     }
 };
-
-// Reset HOD Password
-export const resetHODPassword = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { newPassword } = req.body;
-
-        const passwordValidation = validatePassword(newPassword);
-        if (!passwordValidation.isValid) {
-            return res.status(400).json({ message: passwordValidation.message });
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        const [result] = await db.query('UPDATE hod SET password = ? WHERE id = ?', [hashedPassword, id]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "HOD not found" });
-        }
-
-        res.json({ message: "Password reset successfully" });
-    } catch (error) {
-        console.error("Error resetting HOD password:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-};
 // Get Students for specific HOD (Admin View)
 export const getHODStudents = async (req, res) => {
     try {
@@ -139,7 +105,7 @@ export const getHODStudents = async (req, res) => {
         // Same logic as hodDashboardController but for arbitrary HOD ID
         const query = `
             SELECT 
-                u.id, u.custom_id, u.register_no, u.name, u.email, u.department, u.college_name,
+                u.id, u.name, u.email, u.department, u.college_name,
                 CASE 
                     WHEN EXISTS (SELECT 1 FROM hod_student_mapping m WHERE m.hod_id = ? AND m.student_id = u.id) THEN 'Assigned'
                     ELSE 'Department'

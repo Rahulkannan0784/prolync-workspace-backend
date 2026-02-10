@@ -25,14 +25,24 @@ export const getAllCourses = async (req, res) => {
     }
 };
 
-// Get course by ID
+// Get course by ID or Title
 export const getCourseById = async (req, res) => {
     try {
-        const courseId = req.params.id;
-        const [rows] = await pool.query('SELECT * FROM courses WHERE id = ?', [courseId]);
+        const idOrTitle = req.params.id;
+        const isNumeric = /^\d+$/.test(idOrTitle);
+
+        let rows;
+        if (isNumeric) {
+            [rows] = await pool.query('SELECT * FROM courses WHERE id = ?', [idOrTitle]);
+        } else {
+            const title = decodeURIComponent(idOrTitle);
+            [rows] = await pool.query('SELECT * FROM courses WHERE title = ?', [title]);
+        }
+
         if (rows.length === 0) return res.status(404).json({ message: 'Course not found' });
 
         const course = rows[0];
+        const courseId = course.id; // Use the real ID for subsequent queries
 
         // 1. Dynamic Learners Count
         const [enrollRows] = await pool.query('SELECT COUNT(*) as count FROM enrollments WHERE course_id = ?', [courseId]);
@@ -40,10 +50,6 @@ export const getCourseById = async (req, res) => {
 
         // 2. Dynamic Rating
         const [ratingRows] = await pool.query('SELECT AVG(rating) as avg_rating FROM course_ratings WHERE course_id = ?', [courseId]);
-        // If no ratings, maybe default to a nice number for demo or 0? 
-        // User screenshot shows "NaN", implies it wants a number.
-        // Let's provide 4.8 as default for "demo" feel if 0, or just 0.
-        // Given user request "updated according to videos", let's stick to reality + fallback.
         course.rating = ratingRows[0].avg_rating !== null ? Number(ratingRows[0].avg_rating) : 0;
 
         // 3. Dynamic Duration

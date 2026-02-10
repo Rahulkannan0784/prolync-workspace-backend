@@ -1,7 +1,6 @@
 import db from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import { generateUserId } from '../utils/idGenerator.js';
-import { validatePassword } from '../utils/validation.js';
 
 // @desc    Admin Manually Add User (No OTP)
 // @route   POST /api/admin/users
@@ -18,11 +17,6 @@ export const addUser = async (req, res) => {
         // 1. Validation
         if (!name || !email || !password) {
             return res.status(400).json({ message: 'Name, Email, and Password are required' });
-        }
-
-        const passwordValidation = validatePassword(password);
-        if (!passwordValidation.isValid) {
-            return res.status(400).json({ message: passwordValidation.message });
         }
 
         // 2. Check Exists in all primary tables (users, hod, admin)
@@ -285,9 +279,8 @@ export const resetUserPassword = async (req, res) => {
         const { id } = req.params;
         const { newPassword } = req.body;
 
-        const passwordValidation = validatePassword(newPassword);
-        if (!passwordValidation.isValid) {
-            return res.status(400).json({ message: passwordValidation.message });
+        if (!newPassword || newPassword.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
         }
 
         const salt = await bcrypt.genSalt(10);

@@ -83,15 +83,28 @@ export const getActivePlacementBlogs = async (req, res) => {
     }
 };
 
-// Get single blog by ID
+// Get single blog by ID or Title
 export const getPlacementBlogById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const [blogs] = await db.query(
-            'SELECT * FROM placement_blogs WHERE id = ?',
-            [id]
-        );
+        // Check if id is numeric or a title
+        const isNumeric = /^\d+$/.test(id);
+
+        let blogs;
+        if (isNumeric) {
+            [blogs] = await db.query(
+                'SELECT * FROM placement_blogs WHERE id = ?',
+                [id]
+            );
+        } else {
+            // Search by title (decoded)
+            const title = decodeURIComponent(id);
+            [blogs] = await db.query(
+                'SELECT * FROM placement_blogs WHERE title = ?',
+                [title]
+            );
+        }
 
         if (blogs.length === 0) {
             return res.status(404).json({ message: 'Blog not found' });
@@ -203,7 +216,15 @@ export const deletePlacementBlog = async (req, res) => {
 export const incrementPlacementBlogView = async (req, res) => {
     try {
         const { id } = req.params;
-        await db.query('UPDATE placement_blogs SET views = views + 1 WHERE id = ?', [id]);
+        const isNumeric = /^\d+$/.test(id);
+
+        if (isNumeric) {
+            await db.query('UPDATE placement_blogs SET views = views + 1 WHERE id = ?', [id]);
+        } else {
+            const title = decodeURIComponent(id);
+            await db.query('UPDATE placement_blogs SET views = views + 1 WHERE title = ?', [title]);
+        }
+
         res.status(200).json({ message: 'View incremented' });
     } catch (error) {
         console.error('Error incrementing blog view:', error);

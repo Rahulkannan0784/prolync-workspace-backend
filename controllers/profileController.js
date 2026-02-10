@@ -7,7 +7,7 @@ export const getProfile = async (req, res) => {
     try {
         const userId = req.user.id;
         const [users] = await db.query(
-            'SELECT id, name, email, phone_number, college_name, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, gender, current_role FROM users WHERE id = ?',
+            'SELECT id, name, email, phone_number, college_name, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, onboarding_completed FROM users WHERE id = ?',
             [userId]
         );
 
@@ -26,15 +26,39 @@ export const getProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { name, phone_number, college_name, bio, location, github, linkedin, gender, current_role } = req.body;
+        const updates = req.body;
 
-        await db.query(
-            'UPDATE users SET name = ?, phone_number = ?, college_name = ?, bio = ?, location = ?, github = ?, linkedin = ?, gender = ?, current_role = ? WHERE id = ?',
-            [name, phone_number, college_name, bio, location || null, github, linkedin, gender, current_role, userId]
-        );
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ message: 'No fields provided for update' });
+        }
+
+        const allowedFields = [
+            'name', 'phone_number', 'college_name', 'bio', 'location',
+            'github', 'linkedin', 'leetcode', 'hackerrank', 'codechef', 'gender', 'current_role', 'onboarding_completed'
+        ];
+
+        let query = 'UPDATE users SET ';
+        const params = [];
+        const setClauses = [];
+
+        Object.keys(updates).forEach(key => {
+            if (allowedFields.includes(key)) {
+                setClauses.push(`${key} = ?`);
+                params.push(updates[key]);
+            }
+        });
+
+        if (setClauses.length === 0) {
+            return res.status(400).json({ message: 'No valid fields provided for update' });
+        }
+
+        query += setClauses.join(', ') + ' WHERE id = ?';
+        params.push(userId);
+
+        await db.query(query, params);
 
         // Fetch updated user to return
-        const [updatedUsers] = await db.query('SELECT id, name, email, phone_number, college_name, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, gender, current_role FROM users WHERE id = ?', [userId]);
+        const [updatedUsers] = await db.query('SELECT id, name, email, phone_number, college_name, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, onboarding_completed FROM users WHERE id = ?', [userId]);
 
         res.json({ message: 'Profile updated successfully', user: updatedUsers[0] });
     } catch (error) {

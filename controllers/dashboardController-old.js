@@ -175,12 +175,9 @@ export const getActivityFeed = async (req, res) => {
 // @access  Private/Admin
 export const getChartData = async (req, res) => {
     try {
-        const rawPeriod = req.query.period;
-        const periodKey = rawPeriod ? String(rawPeriod).trim().toLowerCase() : 'month';
+        const { period = 'week' } = req.query;
 
-        console.log(`[CHART DEBUG] Backend Processing: "${periodKey}"`);
-
-        // 1. Course Enrollment Distribution (Pie Chart)
+        // 1. Course Enrollment Distribution (Pie Chart) - Unchanged
         const [courseDist] = await db.query(`
             SELECT c.title, COUNT(e.id) as students
             FROM courses c
@@ -191,80 +188,81 @@ export const getChartData = async (req, res) => {
         // 2. Platform Growth Logic
         let chartData = [];
         let growthRate = 0;
-        let dateRange = "";
 
-        if (periodKey === 'day') {
-            // Today's Hourly Data (00:00 to current hour)
+        if (period === 'day') {
+            // Last 24 Hours (Hourly Data)
+            // Note: This relies on users table having creation time. 
+            // Ideally we'd scan activity_logs for "active users" hourly, but for "Growth" (new users) we use users table.
+
             const [hourlyData] = await db.query(`
                 SELECT DATE_FORMAT(created_at, '%H:00') as hour, COUNT(*) as count
                 FROM users 
-                WHERE created_at >= CURDATE()
+                WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
                 GROUP BY DATE_FORMAT(created_at, '%H:00')
-                ORDER BY hour ASC
+                ORDER BY created_at ASC
             `);
 
+            // Fill missing hours
             const now = new Date();
-            dateRange = `Today, ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
-
-            // Fill all 24 hours
-            for (let i = 0; i < 24; i++) {
-                const hourStr = i.toString().padStart(2, '0') + ':00';
+            for (let i = 23; i >= 0; i--) {
+                const d = new Date(now.getTime() - i * 60 * 60 * 1000);
+                const hourStr = d.getHours().toString().padStart(2, '0') + ':00';
                 const found = hourlyData.find(h => h.hour === hourStr);
                 chartData.push({
                     date: hourStr,
                     count: found ? found.count : 0,
-                    users: []
+                    users: [] // Drill down not strictly needed for hourly but could add
                 });
             }
 
-        } else if (periodKey === 'week') {
+        } else if (period === 'week') {
+            // Last 7 Days (Daily Data) - REALTIME from users table
             const [rows] = await db.query(`
                 SELECT DATE(created_at) as date, COUNT(*) as count 
                 FROM users 
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
                 GROUP BY DATE(created_at)
                 ORDER BY date ASC
             `);
 
+            // Fetch actual users for drill-down (optional but nice)
             const [userRows] = await db.query(`
                 SELECT id, name, email, status, created_at
                 FROM users
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
             `);
 
-            const now = new Date();
-            const start = new Date(now);
-            start.setDate(now.getDate() - 6);
-            dateRange = `${start.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} - ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`;
-
+            // Format
             for (let i = 6; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
                 const dateStr = d.toISOString().split('T')[0];
-                const displayLabel = `${d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} (${d.toLocaleDateString('en-GB', { weekday: 'short' })})`;
+                const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
 
                 const found = rows.find(r => {
                     const rDate = new Date(r.date).toISOString().split('T')[0];
                     return rDate === dateStr;
                 });
 
+                // Filter users for this specific day
                 const dayUsers = userRows.filter(u => {
                     const uDate = new Date(u.created_at).toISOString().split('T')[0];
                     return uDate === dateStr;
                 });
 
                 chartData.push({
-                    date: displayLabel,
+                    date: dayName,
                     count: found ? found.count : 0,
-                    users: dayUsers
+                    users: dayUsers // Populates the drill-down modal
                 });
             }
 
-        } else if (periodKey === 'month') {
+        } else if (period === 'month') {
+            // Last 30 Days - REALTIME
             const [rows] = await db.query(`
                 SELECT DATE(created_at) as date, COUNT(*) as count 
                 FROM users 
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 29 DAY)
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                 GROUP BY DATE(created_at)
                 ORDER BY date ASC
             `);
@@ -272,19 +270,14 @@ export const getChartData = async (req, res) => {
             const [userRows] = await db.query(`
                 SELECT id, name, email, status, created_at
                 FROM users
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 29 DAY)
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
             `);
-
-            const now = new Date();
-            const start = new Date(now);
-            start.setDate(now.getDate() - 29);
-            dateRange = `${start.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} - ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`;
 
             for (let i = 29; i >= 0; i--) {
                 const d = new Date();
                 d.setDate(d.getDate() - i);
                 const dateStr = d.toISOString().split('T')[0];
-                const displayDate = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                const displayDate = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
 
                 const found = rows.find(r => {
                     const rDate = new Date(r.date).toISOString().split('T')[0];
@@ -303,11 +296,12 @@ export const getChartData = async (req, res) => {
                 });
             }
 
-        } else if (periodKey === 'year') {
+        } else if (period === 'year') {
+            // Last 12 Months - REALTIME
             const [rows] = await db.query(`
                 SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count
                 FROM users 
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 11 MONTH)
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
                 GROUP BY DATE_FORMAT(created_at, '%Y-%m')
                 ORDER BY month ASC
             `);
@@ -315,19 +309,15 @@ export const getChartData = async (req, res) => {
             const [userRows] = await db.query(`
                 SELECT id, name, email, status, created_at
                 FROM users
-                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 11 MONTH)
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
             `);
 
-            const now = new Date();
-            const start = new Date(now);
-            start.setMonth(now.getMonth() - 11);
-            dateRange = `${start.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })} - ${now.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}`;
-
+            // Generate last 12 months keys
             for (let i = 11; i >= 0; i--) {
                 const d = new Date();
                 d.setMonth(d.getMonth() - i);
                 const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                const displayMonth = d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+                const displayMonth = d.toLocaleDateString('en-US', { month: 'short' });
 
                 const found = rows.find(r => r.month === monthKey);
 
@@ -345,13 +335,14 @@ export const getChartData = async (req, res) => {
             }
         }
 
+        // Calculate fake growth rate for demo (or real if we pull previous period)
+        // For now, random realistic variation
         growthRate = Math.floor(Math.random() * 20) - 5;
 
         res.json({
             courseDistribution: courseDist,
             chart: chartData,
-            growth: growthRate,
-            dateRange: dateRange
+            growth: growthRate
         });
 
     } catch (error) {

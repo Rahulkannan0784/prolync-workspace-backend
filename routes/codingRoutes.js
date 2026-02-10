@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProgress, submitSolution, getUserCodingStats, getQuestions, getQuestionById, createQuestion, updateQuestion, deleteQuestion, importQuestions, getQuestionAnalytics, getPlatformAnalytics, getTopics, getKits, createKit, updateKit, deleteKit } from '../controllers/codingController.js';
+import { getUserProgress, submitSolution, getUserCodingStats, getQuestions, getQuestionById, getDailyChallenge, createQuestion, updateQuestion, deleteQuestion, importQuestions, getQuestionAnalytics, getPlatformAnalytics, getTopics, getKits, createKit, updateKit, deleteKit } from '../controllers/codingController.js';
 import { protect as authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -10,6 +10,7 @@ router.get('/topics', authMiddleware, getTopics);
 router.get('/', authMiddleware, getQuestions);
 router.get('/progress', authMiddleware, getUserProgress);
 router.get('/stats', authMiddleware, getUserCodingStats); // Must be before /:id to avoid collision if :id matches stats
+router.get('/daily-challenge', authMiddleware, getDailyChallenge);
 
 // Kit Management - MUST be before /:id route
 router.get('/kits', authMiddleware, getKits);

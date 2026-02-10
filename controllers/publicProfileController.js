@@ -14,7 +14,7 @@ export const getPublicProfile = async (req, res) => {
         // We include 'email' internally to fetch mentorship data, but we DO NOT expose it in the final response.
         // 1. Fetch User Basics
         const baseColumns = `
-            id, name, email, bio, role, profile_picture, location, github, linkedin, current_role, custom_id, created_at, college_name,
+            id, name, email, bio, role, profile_picture, location, github, linkedin, leetcode, hackerrank, codechef, current_role, custom_id, created_at, college_name,
             resume_path,
             resume_path as resume_url,
             CASE WHEN resume_path IS NOT NULL AND resume_path != '' THEN TRUE ELSE FALSE END as has_resume
@@ -221,7 +221,10 @@ export const getPublicProfile = async (req, res) => {
             is_verified: true, // You can add logic for verification (e.g. if college_name is present)
             social_links: {
                 github: user.github,
-                linkedin: user.linkedin
+                linkedin: user.linkedin,
+                leetcode: user.leetcode,
+                hackerrank: user.hackerrank,
+                codechef: user.codechef
             },
             stats: stats,
             badges: badges,

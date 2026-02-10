@@ -1,7 +1,7 @@
 import db from '../config/db.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { validatePassword } from '../utils/validation.js';
+
 import { generateUserId } from '../utils/idGenerator.js';
 
 const ADMIN_EMAIL = 'admin@prolync.in';
@@ -22,9 +22,12 @@ export const register = async (req, res) => {
     }
 
     // 2. Validate Password Strength
-    const passwordValidation = validatePassword(password);
-    if (!passwordValidation.isValid) {
-        return res.status(400).json({ message: passwordValidation.message });
+    // Min 8, 1 Upper, 1 Lower, 1 Num, 1 Special
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+        return res.status(400).json({
+            message: 'Password must be at least 8 chars long and include uppercase, lowercase, number, and special character.'
+        });
     }
     try {
         // Check Exists in all primary tables (users, hod, admin)
@@ -340,14 +343,13 @@ export const forgotPassword = async (req, res) => {
     if (!email) return res.status(400).json({ message: 'Email is required' });
 
     try {
-        const [[users], [admins], [hods]] = await Promise.all([
-            db.query('SELECT id FROM users WHERE email = ?', [email]),
-            db.query('SELECT user_id FROM admin WHERE email = ?', [email]),
-            db.query('SELECT id FROM hod WHERE email = ?', [email])
-        ]);
-
-        if (users.length === 0 && admins.length === 0 && hods.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
+        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (users.length === 0) {
+            // Check admin
+            const [admins] = await db.query('SELECT * FROM admin WHERE email = ?', [email]);
+            if (admins.length === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
         }
 
         const otp = generateOTP();
@@ -381,27 +383,17 @@ export const resetPassword = async (req, res) => {
             return res.status(400).json({ message: 'Invalid or expired OTP' });
         }
 
-        const passwordValidation = validatePassword(newPassword);
-        if (!passwordValidation.isValid) {
-            return res.status(400).json({ message: passwordValidation.message });
-        }
-
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-        // 1. Try updating user (hashed)
+        // Try updating user
         const [userUpdate] = await db.query('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email]);
 
         if (userUpdate.affectedRows === 0) {
-            // 2. Try updating HOD (hashed)
-            const [hodUpdate] = await db.query('UPDATE hod SET password = ? WHERE email = ?', [hashedPassword, email]);
-
-            if (hodUpdate.affectedRows === 0) {
-                // 3. Try updating admin (plain text - as per current code)
-                const [adminUpdate] = await db.query('UPDATE admin SET password = ? WHERE email = ?', [newPassword, email]);
-                if (adminUpdate.affectedRows === 0) {
-                    return res.status(404).json({ message: 'User not found' });
-                }
+            // Try updating admin
+            const [adminUpdate] = await db.query('UPDATE admin SET password = ? WHERE email = ?', [newPassword, email]); // Admin stores plain text?? Based on login logic yes.
+            if (adminUpdate.affectedRows === 0) {
+                return res.status(404).json({ message: 'User not found' });
             }
         }
 
@@ -433,30 +425,7 @@ export const changePassword = async (req, res) => {
                 return res.status(400).json({ message: 'Incorrect current password' });
             }
 
-            const passwordValidation = validatePassword(newPassword);
-            if (!passwordValidation.isValid) {
-                return res.status(400).json({ message: passwordValidation.message });
-            }
-
             await db.query('UPDATE admin SET password = ? WHERE user_id = ?', [newPassword, userId]);
-        } else if (role === 'HOD') {
-            const [hods] = await db.query('SELECT * FROM hod WHERE id = ?', [userId]);
-            if (hods.length === 0) return res.status(404).json({ message: 'User not found' });
-
-            const hod = hods[0];
-            const isMatch = await bcrypt.compare(currentPassword, hod.password);
-            if (!isMatch) {
-                return res.status(400).json({ message: 'Incorrect current password' });
-            }
-
-            const passwordValidation = validatePassword(newPassword);
-            if (!passwordValidation.isValid) {
-                return res.status(400).json({ message: passwordValidation.message });
-            }
-
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(newPassword, salt);
-            await db.query('UPDATE hod SET password = ? WHERE id = ?', [hashedPassword, userId]);
         } else {
             const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
             if (users.length === 0) return res.status(404).json({ message: 'User not found' });
@@ -465,11 +434,6 @@ export const changePassword = async (req, res) => {
             const isMatch = await bcrypt.compare(currentPassword, user.password);
             if (!isMatch) {
                 return res.status(400).json({ message: 'Incorrect current password' });
-            }
-
-            const passwordValidation = validatePassword(newPassword);
-            if (!passwordValidation.isValid) {
-                return res.status(400).json({ message: passwordValidation.message });
             }
 
             const salt = await bcrypt.genSalt(10);

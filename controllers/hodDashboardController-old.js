@@ -123,63 +123,62 @@ export const getActivityTrends = async (req, res) => {
 
         // --- DAILY (Last 7 Days) ---
         const [dailyLogins] = await db.query(`
-            SELECT DATE(a.created_at) as period_key, COUNT(*) as count 
+            SELECT DATE(a.created_at) as date, COUNT(*) as count 
             FROM activity_logs a JOIN users u ON a.user_id = u.id
             WHERE ((u.college_name = ? AND u.department = ?) 
                OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
             AND a.action = 'LOGIN'
             AND a.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-            GROUP BY period_key ORDER BY period_key ASC
+            GROUP BY DATE(a.created_at) ORDER BY date ASC
         `, [college, department, hodId]);
 
         const [dailySubmissions] = await db.query(`
-            SELECT DATE(s.created_at) as period_key, COUNT(*) as count 
+            SELECT DATE(s.created_at) as date, COUNT(*) as count 
             FROM submissions s JOIN users u ON s.user_id = u.id
             WHERE ((u.college_name = ? AND u.department = ?) 
                OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
             AND s.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-            GROUP BY period_key ORDER BY period_key ASC
+            GROUP BY DATE(s.created_at) ORDER BY date ASC
         `, [college, department, hodId]);
 
         // --- WEEKLY (Last 8 Weeks) ---
-        // Normalizing to Monday start
         const [weeklyLogins] = await db.query(`
-            SELECT DATE(DATE_SUB(a.created_at, INTERVAL WEEKDAY(a.created_at) DAY)) as period_key, COUNT(*) as count 
+            SELECT DATE_FORMAT(a.created_at, '%Y-%u') as week_key, MIN(DATE(a.created_at)) as start_date, COUNT(*) as count 
             FROM activity_logs a JOIN users u ON a.user_id = u.id
             WHERE ((u.college_name = ? AND u.department = ?) 
                OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
             AND a.action = 'LOGIN'
             AND a.created_at >= DATE_SUB(NOW(), INTERVAL 8 WEEK)
-            GROUP BY period_key ORDER BY period_key ASC
+            GROUP BY week_key ORDER BY week_key ASC
         `, [college, department, hodId]);
 
         const [weeklySubmissions] = await db.query(`
-            SELECT DATE(DATE_SUB(s.created_at, INTERVAL WEEKDAY(s.created_at) DAY)) as period_key, COUNT(*) as count 
+            SELECT DATE_FORMAT(s.created_at, '%Y-%u') as week_key, MIN(DATE(s.created_at)) as start_date, COUNT(*) as count 
             FROM submissions s JOIN users u ON s.user_id = u.id
             WHERE ((u.college_name = ? AND u.department = ?) 
                OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
             AND s.created_at >= DATE_SUB(NOW(), INTERVAL 8 WEEK)
-            GROUP BY period_key ORDER BY period_key ASC
+            GROUP BY week_key ORDER BY week_key ASC
         `, [college, department, hodId]);
 
         // --- MONTHLY (Last 6 Months) ---
         const [monthlyLogins] = await db.query(`
-            SELECT DATE_FORMAT(a.created_at, '%Y-%m-01') as period_key, COUNT(*) as count 
+            SELECT DATE_FORMAT(a.created_at, '%Y-%m') as month_key, COUNT(*) as count 
             FROM activity_logs a JOIN users u ON a.user_id = u.id
             WHERE ((u.college_name = ? AND u.department = ?) 
                OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
             AND a.action = 'LOGIN'
-            AND a.created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
-            GROUP BY period_key ORDER BY period_key ASC
+            AND a.created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            GROUP BY month_key ORDER BY month_key ASC
         `, [college, department, hodId]);
 
         const [monthlySubmissions] = await db.query(`
-            SELECT DATE_FORMAT(s.created_at, '%Y-%m-01') as period_key, COUNT(*) as count 
+            SELECT DATE_FORMAT(s.created_at, '%Y-%m') as month_key, COUNT(*) as count 
             FROM submissions s JOIN users u ON s.user_id = u.id
             WHERE ((u.college_name = ? AND u.department = ?) 
                OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
-            AND s.created_at >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
-            GROUP BY period_key ORDER BY period_key ASC
+            AND s.created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            GROUP BY month_key ORDER BY month_key ASC
         `, [college, department, hodId]);
 
         res.json({
@@ -249,7 +248,6 @@ export const getTopPerformers = async (req, res) => {
         // We'll trust Avg Progress as main indicator
         const [performers] = await db.query(`
             SELECT 
-                u.id,
                 u.name, 
                 u.email,
                 u.profile_picture,
@@ -502,7 +500,7 @@ export const getMetricDetails = async (req, res) => {
         if (metric === 'mentor_booked') {
             const [rows] = await db.query(`
                 SELECT u.name, u.email, u.profile_picture, COUNT(*) as value,
-                       GROUP_CONCAT(DISTINCT CONCAT(ms.mentor_name, ' (', ms.topic, ')') SEPARATOR ', ') as mentor_names
+                       GROUP_CONCAT(DISTINCT ms.mentor_name SEPARATOR ', ') as mentor_names
                 FROM mentorship_sessions ms
                 JOIN users u ON ms.student_email = u.email
                 WHERE ((u.college_name = ? AND u.department = ?) 
