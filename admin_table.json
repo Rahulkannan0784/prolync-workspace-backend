@@ -1,0 +1,11 @@
+[
+  {
+    "user_id": 7,
+    "full_name": "Bavishika",
+    "email": "310623104026@eec.srmrmp.edu.in",
+    "password": "admin@123",
+    "role": "ADMIN",
+    "status": "ACTIVE",
+    "created_at": "2026-01-08T05:09:43.000Z"
+  }
+]

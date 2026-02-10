@@ -1,0 +1,86 @@
+[
+  {
+    "id": 9,
+    "title": "AI Chip Demand Triggers Global Memory Shortage",
+    "description": "Global technology companies are facing an unprecedented memory chip shortage as demand for AI-powered systems continues to rise. Leading semiconductor manufacturers have reported supply constraints due to increased usage in data centers, cloud computing, and AI model training. This shortage may impact smartphone production, laptop availability, and overall hardware pricing in the coming months. Experts expect the situation to stabilize only by late 2026.",
+    "category": "Tech Update",
+    "status": "Publish",
+    "publish_date": "2026-01-18T18:30:00.000Z",
+    "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    "external_link": "https://timesofindia.indiatimes.com/technology/tech-news/chatgpt-performs-better-when-youre-rude-to-it-but-researchers-warn-that-theres-a-catch/articleshow/126640618.cms?utm_source=chatgpt.com",
+    "created_at": "2026-01-19T05:45:32.000Z",
+    "views": 0
+  },
+  {
+    "id": 10,
+    "title": "Top 5 AI Tools Students Should Learn in 2026",
+    "description": "Artificial Intelligence is transforming the tech industry rapidly. Students preparing for placements in 2026 are encouraged to gain hands-on experience with AI tools such as ChatGPT, GitHub Copilot, TensorFlow, PyTorch, and AutoML platforms. Learning these tools can significantly improve productivity, project quality, and placement opportunities.",
+    "category": "Tech Update",
+    "status": "Publish",
+    "publish_date": "2026-01-18T18:30:00.000Z",
+    "image_url": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
+    "external_link": "https://economictimes.indiatimes.com/tech",
+    "created_at": "2026-01-19T05:59:24.000Z",
+    "views": 0
+  },
+  {
+    "id": 12,
+    "title": "UGC NET 2026: Important Dates, Exam Pattern & Preparation Tips",
+    "description": "The UGC NET 2026 examination is expected to be conducted in multiple phases across the country. Candidates should regularly check the official website for updates on application dates, exam schedule, and syllabus. The exam will test subject knowledge, teaching aptitude, research skills, and reasoning ability. Aspirants are advised to revise core topics, practice previous year questions, and attempt mock tests for better time management.",
+    "category": "Exam Update",
+    "status": "Publish",
+    "publish_date": "2026-01-18T18:30:00.000Z",
+    "image_url": "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
+    "external_link": "https://ugcnet.nta.nic.in",
+    "created_at": "2026-01-19T06:04:08.000Z",
+    "views": 1
+  },
+  {
+    "id": 13,
+    "title": "AI Skills Are Becoming Mandatory for Software Jobs in 2026",
+    "description": "Technology companies are increasingly prioritizing AI-related skills while hiring software engineers in 2026. Knowledge of AI tools such as ChatGPT, GitHub Copilot, machine learning basics, and prompt engineering is now considered a strong advantage. Students are encouraged to integrate AI tools into their learning and projects to stay competitive in the job market.",
+    "category": "Tech Update",
+    "status": "Publish",
+    "publish_date": "2026-01-18T18:30:00.000Z",
+    "image_url": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
+    "external_link": "https://economictimes.indiatimes.com/tech",
+    "created_at": "2026-01-19T06:09:00.000Z",
+    "views": 0
+  },
+  {
+    "id": 11,
+    "title": "JEE Main 2026: Last-Minute Preparation Tips for Aspirants",
+    "description": "With JEE Main 2026 approaching, students are advised to focus on revision rather than learning new concepts. Solving previous year question papers, revising formulas, and managing time efficiently during mock tests can greatly improve performance. Staying calm and confident is key during the final days.",
+    "category": "Exam Update",
+    "status": "Publish",
+    "publish_date": "2026-01-17T18:30:00.000Z",
+    "image_url": "/uploads/news/image-1769525376446.webp",
+    "external_link": "https://nta.ac.in",
+    "created_at": "2026-01-19T06:00:31.000Z",
+    "views": 3
+  },
+  {
+    "id": 8,
+    "title": "AI Tools Are Rapidly Changing How Software Is Built",
+    "description": "Artificial Intelligence is transforming software development by automating coding, testing, and deployment processes. Modern AI tools can now generate code, detect bugs, optimize performance, and assist developers in real time.\r\n\r\nCompanies are increasingly adopting AI-powered development platforms to reduce development time and improve code quality. These advancements are making software creation faster, smarter, and more accessible to beginners and professionals alike.\r\n\r\nAI is expected to play a major role in shaping the future of web development, cloud computing, and automation.Artificial Intelligence is transforming software development by automating coding, testing, and deployment processes. Modern AI tools can now generate code, detect bugs, optimize performance, and assist developers in real time.\r\n\r\nCompanies are increasingly adopting AI-powered development platforms to reduce development time and improve code quality. These advancements are making software creation faster, smarter, and more accessible to beginners and professionals alike.\r\n\r\nAI is expected to play a major role in shaping the future of web development, cloud computing, and automation.",
+    "category": "Tech Update",
+    "status": "Publish",
+    "publish_date": "2026-01-11T18:30:00.000Z",
+    "image_url": "/uploads/news/image-1768198690870.webp",
+    "external_link": "https://www.ibm.com/topics/artificial-intelligence",
+    "created_at": "2026-01-12T06:18:10.000Z",
+    "views": 0
+  },
+  {
+    "id": 4,
+    "title": "GATE 2026 Exam Schedule Released",
+    "description": "This article has been created to provide students with clear and structured information regarding recent updates and announcements. The objective is to help readers understand the context, importance, and next steps related to the update.\r\n\r\n Students are advised to read the content carefully and follow any official instructions mentioned. Staying informed and prepared in advance can help avoid confusion and last-minute issues.",
+    "category": "Exam Update",
+    "status": "Publish",
+    "publish_date": "2026-01-09T18:30:00.000Z",
+    "image_url": "/uploads/news/image-1768198690870.webp",
+    "external_link": "https://ugcnet.nta.nic.in/",
+    "created_at": "2026-01-10T08:23:21.000Z",
+    "views": 0
+  }
+]

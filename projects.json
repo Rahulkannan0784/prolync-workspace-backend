@@ -1,0 +1,66 @@
+[
+  {
+    "id": 16,
+    "project_id": 10,
+    "student_id": 3,
+    "status": "Interested",
+    "applied_at": "2026-01-19T01:40:01.000Z",
+    "github_url": null,
+    "live_url": null,
+    "tech_stack_used": null,
+    "submission_notes": null,
+    "screenshots": null
+  },
+  {
+    "id": 17,
+    "project_id": 11,
+    "student_id": 3,
+    "status": "Interested",
+    "applied_at": "2026-01-19T07:14:14.000Z",
+    "github_url": null,
+    "live_url": null,
+    "tech_stack_used": null,
+    "submission_notes": null,
+    "screenshots": null
+  },
+  {
+    "id": 18,
+    "project_id": 11,
+    "student_id": 7,
+    "status": "Interested",
+    "applied_at": "2026-01-19T09:11:20.000Z",
+    "github_url": null,
+    "live_url": null,
+    "tech_stack_used": null,
+    "submission_notes": null,
+    "screenshots": null
+  },
+  {
+    "id": 19,
+    "project_id": 10,
+    "student_id": 2,
+    "status": "Submitted",
+    "applied_at": "2026-01-24T06:36:47.000Z",
+    "github_url": "https://github.com/bavishika",
+    "live_url": "",
+    "tech_stack_used": "React",
+    "submission_notes": "",
+    "screenshots": [
+      "/uploads/project_submissions/screenshot-1769236109232.png"
+    ]
+  },
+  {
+    "id": 20,
+    "project_id": 11,
+    "student_id": 2,
+    "status": "Submitted",
+    "applied_at": "2026-01-24T08:45:16.000Z",
+    "github_url": "https://github.com/shika",
+    "live_url": "",
+    "tech_stack_used": "Node.js",
+    "submission_notes": "",
+    "screenshots": [
+      "/uploads/project_submissions/screenshot-1769244302208.webp"
+    ]
+  }
+]

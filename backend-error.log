@@ -1,0 +1,294 @@
+[GLOBAL ERROR] 2026-01-03T09:05:46.243Z - Cannot destructure property 'userId' of 'req.body' as it is undefined.
+TypeError: Cannot destructure property 'userId' of 'req.body' as it is undefined.
+    at enrollUser (file:///C:/Users/mohan/OneDrive/Desktop/Bavishika_final/MY_final_sathish-Sharma/Backend/controllers/courseController.js:123:13)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\route.js:157:13)
+    at protect (file:///C:/Users/mohan/OneDrive/Desktop/Bavishika_final/MY_final_sathish-Sharma/Backend/middleware/authMiddleware.js:17:13)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:295:15
+----------------
+[GLOBAL ERROR] 2026-01-03T09:05:57.268Z - Cannot destructure property 'userId' of 'req.body' as it is undefined.
+TypeError: Cannot destructure property 'userId' of 'req.body' as it is undefined.
+    at enrollUser (file:///C:/Users/mohan/OneDrive/Desktop/Bavishika_final/MY_final_sathish-Sharma/Backend/controllers/courseController.js:123:13)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\route.js:157:13)
+    at protect (file:///C:/Users/mohan/OneDrive/Desktop/Bavishika_final/MY_final_sathish-Sharma/Backend/middleware/authMiddleware.js:17:13)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at next (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\route.js:157:13)
+    at Route.dispatch (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\route.js:117:3)
+    at handle (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:435:11)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:295:15
+----------------
+[GLOBAL ERROR] 2026-01-03T17:19:03.908Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/mohan/OneDrive/Desktop/Bavishika_final/MY_final_sathish-Sharma/Backend/index.js:54:22)
+    at C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\mohan\OneDrive\Desktop\Bavishika_final\MY_final_sathish-Sharma\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:20:55.171Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:21:02.631Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:21:45.637Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:22:05.910Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:22:49.650Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:23:27.144Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:58:19.723Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-07T04:58:33.786Z - Not allowed by CORS
+Error: Not allowed by CORS
+    at origin (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/index.js:55:22)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:219:13
+    at optionsCallback (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:199:9)
+    at corsMiddleware (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\cors\lib\index.js:204:7)
+    at Layer.handleRequest (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:342:13)
+    at C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:297:9
+    at processParams (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:582:12)
+    at next (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:291:5)
+    at Function.handle (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\router\index.js:186:3)
+----------------
+[GLOBAL ERROR] 2026-01-10T07:12:34.013Z - File too large
+MulterError: File too large
+    at abortWithCode (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:85:22)
+    at FileStream.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:155:11)
+    at FileStream.emit (node:events:518:28)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:479:32)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+----------------
+[GLOBAL ERROR] 2026-01-12T05:03:11.236Z - undefined
+undefined
+----------------
+[GLOBAL ERROR] 2026-01-12T05:05:37.132Z - undefined
+undefined
+----------------
+[GLOBAL ERROR] 2026-01-12T05:05:45.504Z - undefined
+undefined
+----------------
+[GLOBAL ERROR] 2026-01-12T05:07:39.240Z - Error: Videos Only!
+Error: Error: Videos Only!
+    at fileFilter (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/routes/moduleRoutes.js:36:16)
+    at wrappedFileFilter (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\index.js:44:7)
+    at Multipart.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:132:7)
+    at Multipart.emit (node:events:518:28)
+    at HeaderParser.cb (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:358:14)
+    at HeaderParser.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:162:20)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:394:37)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+----------------
+[GLOBAL ERROR] 2026-01-12T05:24:06.154Z - Error: Videos Only!
+Error: Error: Videos Only!
+    at fileFilter (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/routes/moduleRoutes.js:36:16)
+    at wrappedFileFilter (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\index.js:44:7)
+    at Multipart.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:132:7)
+    at Multipart.emit (node:events:518:28)
+    at HeaderParser.cb (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:358:14)
+    at HeaderParser.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:162:20)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:394:37)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+----------------
+[ T E S T  
+ M A R K E R ]  
+ W r i t i n g  
+ t o  
+ B a c k e n d / b a c k e n d - e r r o r . l o g  
+ [GLOBAL ERROR] 2026-01-12T06:15:24.409Z - undefined
+undefined
+----------------
+[DEBUG] 2026-01-12T06:16:39.162Z - addNews called. Body: {"title":"AI Tools Are Rapidly Changing How Software Is Built","description":"Artificial Intelligence is transforming software development by automating coding, testing, and deployment processes. Modern AI tools can now generate code, detect bugs, optimize performance, and assist developers in real time.\r\n\r\nCompanies are increasingly adopting AI-powered development platforms to reduce development time and improve code quality. These advancements are making software creation faster, smarter, and more accessible to beginners and professionals alike.\r\n\r\nAI is expected to play a major role in shaping the future of web development, cloud computing, and automation.","category":"Tech Update","status":"Publish","publish_date":"2026-01-12","external_link":"https://jeemain.nta.ac.in","image_url":""}
+[DEBUG] 2026-01-12T06:16:39.164Z - addNews File: {"fieldname":"image","originalname":"img1.webp","encoding":"7bit","mimetype":"image/webp","destination":"uploads/news/","filename":"image-1768198599149.webp","path":"uploads\\news\\image-1768198599149.webp","size":32972}
+[DEBUG] 2026-01-12T06:18:10.876Z - addNews called. Body: {"title":"AI Tools Are Rapidly Changing How Software Is Built","description":"Artificial Intelligence is transforming software development by automating coding, testing, and deployment processes. Modern AI tools can now generate code, detect bugs, optimize performance, and assist developers in real time.\r\n\r\nCompanies are increasingly adopting AI-powered development platforms to reduce development time and improve code quality. These advancements are making software creation faster, smarter, and more accessible to beginners and professionals alike.\r\n\r\nAI is expected to play a major role in shaping the future of web development, cloud computing, and automation.Artificial Intelligence is transforming software development by automating coding, testing, and deployment processes. Modern AI tools can now generate code, detect bugs, optimize performance, and assist developers in real time.\r\n\r\nCompanies are increasingly adopting AI-powered development platforms to reduce development time and improve code quality. These advancements are making software creation faster, smarter, and more accessible to beginners and professionals alike.\r\n\r\nAI is expected to play a major role in shaping the future of web development, cloud computing, and automation.","category":"Tech Update","status":"Publish","publish_date":"2026-01-12","external_link":"https://www.ibm.com/topics/artificial-intelligence","image_url":""}
+[DEBUG] 2026-01-12T06:18:10.880Z - addNews File: {"fieldname":"image","originalname":"img1.webp","encoding":"7bit","mimetype":"image/webp","destination":"uploads/news/","filename":"image-1768198690870.webp","path":"uploads\\news\\image-1768198690870.webp","size":32972}
+[GLOBAL ERROR] 2026-01-12T10:04:57.726Z - File too large
+MulterError: File too large
+    at abortWithCode (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:85:22)
+    at FileStream.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:155:11)
+    at FileStream.emit (node:events:518:28)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:479:32)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+----------------
+[GLOBAL ERROR] 2026-01-12T10:05:41.866Z - File too large
+MulterError: File too large
+    at abortWithCode (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:85:22)
+    at FileStream.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:155:11)
+    at FileStream.emit (node:events:518:28)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:479:32)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+----------------
+[GLOBAL ERROR] 2026-01-13T03:55:24.006Z - File too large
+MulterError: File too large
+    at abortWithCode (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:85:22)
+    at FileStream.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:155:11)
+    at FileStream.emit (node:events:518:28)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:479:32)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+----------------
+[GLOBAL ERROR] 2026-01-13T03:56:46.559Z - File too large
+MulterError: File too large
+    at abortWithCode (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:85:22)
+    at FileStream.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:155:11)
+    at FileStream.emit (node:events:518:28)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:479:32)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+    at writeOrBuffer (node:internal/streams/writable:572:12)
+    at _write (node:internal/streams/writable:501:10)
+    at Writable.write (node:internal/streams/writable:510:10)
+----------------
+[GLOBAL ERROR] 2026-01-13T07:06:55.013Z - Only image files are allowed!
+Error: Only image files are allowed!
+    at fileFilter (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/routes/profile.js:40:23)
+    at wrappedFileFilter (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\index.js:44:7)
+    at Multipart.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:132:7)
+    at Multipart.emit (node:events:518:28)
+    at HeaderParser.cb (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:358:14)
+    at HeaderParser.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:162:20)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:394:37)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:248:10)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+----------------
+[GLOBAL ERROR] 2026-01-13T08:14:52.539Z - Only image files are allowed!
+Error: Only image files are allowed!
+    at fileFilter (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/routes/profile.js:40:23)
+    at wrappedFileFilter (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\index.js:44:7)
+    at Multipart.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:132:7)
+    at Multipart.emit (node:events:518:28)
+    at HeaderParser.cb (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:358:14)
+    at HeaderParser.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:162:20)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:394:37)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:219:14)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+----------------
+[GLOBAL ERROR] 2026-01-13T08:19:51.061Z - Only image files are allowed!
+Error: Only image files are allowed!
+    at fileFilter (file:///C:/Users/bavis/OneDrive/Desktop/shika/Internships/Prolync/workspace/Karpagam_final/Backend/routes/profile.js:40:23)
+    at wrappedFileFilter (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\index.js:44:7)
+    at Multipart.<anonymous> (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\multer\lib\make-middleware.js:132:7)
+    at Multipart.emit (node:events:518:28)
+    at HeaderParser.cb (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:358:14)
+    at HeaderParser.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:162:20)
+    at SBMH.ssCb [as _cb] (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:394:37)
+    at feed (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:219:14)
+    at SBMH.push (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\streamsearch\lib\sbmh.js:104:16)
+    at Multipart._write (C:\Users\bavis\OneDrive\Desktop\shika\Internships\Prolync\workspace\Karpagam_final\Backend\node_modules\busboy\lib\types\multipart.js:567:19)
+----------------

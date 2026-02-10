@@ -1,0 +1,15 @@
+node_modules/
+.env
+venv/
+__pycache__/
+uploads/
+media/
+static/
+dist/
+build/
+*.log
+*.zip
+*.mp4
+*.jpg
+*.png
+*.sql

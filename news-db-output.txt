@@ -1,0 +1,35 @@
+ID: 4
+Title: GATE 2026 Exam Schedule Released
+Category: Exam Update
+Image: /uploads/news/image-1768198690870.webp
+-------------------
+ID: 8
+Title: AI Tools Are Rapidly Changing How Software Is Built
+Category: Tech Update
+Image: /uploads/news/image-1768198690870.webp
+-------------------
+ID: 9
+Title: AI Chip Demand Triggers Global Memory Shortage
+Category: Tech Update
+Image: https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80
+-------------------
+ID: 10
+Title: Top 5 AI Tools Students Should Learn in 2026
+Category: Tech Update
+Image: https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80
+-------------------
+ID: 11
+Title: JEE Main 2026: Last-Minute Preparation Tips for Aspirants
+Category: Exam Update
+Image: /uploads/news/image-1769525376446.webp
+-------------------
+ID: 12
+Title: UGC NET 2026: Important Dates, Exam Pattern & Preparation Tips
+Category: Exam Update
+Image: https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80
+-------------------
+ID: 13
+Title: AI Skills Are Becoming Mandatory for Software Jobs in 2026
+Category: Tech Update
+Image: https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80
+-------------------
