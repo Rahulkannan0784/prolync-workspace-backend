@@ -29,6 +29,7 @@ import profileRoutes from './routes/profile.js';
 import publicProfileRoutes from './routes/publicProfileRoutes.js';
 import hodRoutes from './routes/hodRoutes.js';
 import hodAssignmentRoutes from './routes/hodAssignmentRoutes.js';
+import badgeRoutes from './routes/badgeRoutes.js';
 
 dotenv.config();
 
@@ -108,7 +109,7 @@ app.use('/api/placement-blogs', placementBlogRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/public/profile', publicProfileRoutes);
-app.use('/api/public/profile', publicProfileRoutes);
+app.use('/api/badges', badgeRoutes);
 
 // ...
 

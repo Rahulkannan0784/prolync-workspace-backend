@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllUsers, addUser, getColleges, getDepartments, updateUser, bulkDeleteUsers, resetUserPassword, forceLogoutUser, getUserDetails, getStudentProgress, getUserCalendarData, getUserLearningStats, getStudentCodingProfile, manageUserValidity, getActiveUsers } from '../controllers/adminController.js';
+import { getAllUsers, addUser, getColleges, getDepartments, updateUser, bulkDeleteUsers, resetUserPassword, forceLogoutUser, getUserDetails, getStudentProgress, getUserCalendarData, getUserLearningStats, getStudentCodingProfile, manageUserValidity, getActiveUsers, bulkAddUsers } from '../controllers/adminController.js';
 import { getDashboardStats, getActivityFeed, getChartData, getTopActiveUsers } from '../controllers/dashboardController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -15,6 +15,7 @@ router.get('/top-users', protect, admin, getTopActiveUsers);
 router.get('/colleges', protect, admin, getColleges);
 router.get('/departments', protect, admin, getDepartments);
 router.post('/users', protect, admin, addUser);
+router.post('/users/bulk', protect, admin, bulkAddUsers);
 router.get('/users', protect, admin, getAllUsers);
 router.get('/active-users', protect, admin, getActiveUsers);
 router.get('/students/progress', protect, admin, getStudentProgress);

@@ -779,3 +779,113 @@ export const manageUserValidity = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// @desc    Bulk Add Users
+// @route   POST /api/admin/users/bulk
+// @access  Private/Admin
+export const bulkAddUsers = async (req, res) => {
+    try {
+        const { users } = req.body; // Expects an array of user objects
+
+        if (!users || !Array.isArray(users)) {
+            return res.status(400).json({ message: 'Invalid data format. Expected an array of users.' });
+        }
+
+        let successCount = 0;
+        let failCount = 0;
+        const errors = [];
+        const salt = await bcrypt.genSalt(10);
+
+        for (let i = 0; i < users.length; i++) {
+            let { name, email, password, role, gender, college_name, department, register_no } = users[i];
+            const rowNumber = i + 1;
+
+            try {
+                // 1. Basic Cleaning & Validation
+                name = name?.trim();
+                email = email?.trim()?.toLowerCase();
+                password = password?.toString()?.trim();
+
+                role = 'Student';
+                gender = gender || null; // Default to NULL if not provided
+
+                // Allow optional fields if provided, otherwise NULL
+                college_name = college_name?.trim() || null;
+                department = department?.trim() || null;
+                register_no = register_no?.trim() || null;
+
+                if (!name || !email || !password) {
+                    throw new Error('Missing required fields (Name, Email, or Password)');
+                }
+
+                // Email format check
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    throw new Error('Invalid email format');
+                }
+
+                // Password validation
+                const passwordValidation = validatePassword(password);
+                if (!passwordValidation.isValid) {
+                    throw new Error(passwordValidation.message);
+                }
+
+                // 2. Check Duplicates
+                const [existingUser] = await db.query('SELECT id FROM users WHERE email = ?', [email]);
+                const [existingHOD] = await db.query('SELECT id FROM hod WHERE email = ?', [email]);
+                const [existingAdmin] = await db.query('SELECT user_id FROM admin WHERE email = ?', [email]);
+
+                if (existingUser.length > 0 || existingHOD.length > 0 || existingAdmin.length > 0) {
+                    throw new Error('Email already exists in the system');
+                }
+
+                if (register_no) {
+                    const [existingReg] = await db.query('SELECT id FROM users WHERE register_no = ?', [register_no]);
+                    if (existingReg.length > 0) {
+                        throw new Error('Register Number already exists');
+                    }
+                }
+
+                // 3. Process & Insert
+                const hashedPassword = await bcrypt.hash(password, salt);
+                const customId = await generateUserId();
+
+                await db.query(
+                    'INSERT INTO users (name, email, password, custom_id, role, gender, college_name, department, register_no, valid_until, is_verified, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, DATE_ADD(NOW(), INTERVAL 30 DAY), ?, ?)',
+                    [name, email, hashedPassword, customId, role, gender, college_name, department, register_no, true, 'Active']
+                );
+
+                successCount++;
+            } catch (err) {
+                failCount++;
+                errors.push({
+                    row: rowNumber,
+                    name: name || 'Unknown',
+                    email: email || 'Unknown',
+                    reason: err.message
+                });
+            }
+        }
+
+        // Log Bulk Action
+        try {
+            await db.query(
+                'INSERT INTO activity_logs (user_id, action, details, ip_address) VALUES (?, ?, ?, ?)',
+                [req.user.id, 'ADMIN_BULK_ADD_USERS', `Admin bulk added ${successCount} users. ${failCount} failed.`, req.ip]
+            );
+        } catch (e) {
+            console.error("Log failed", e);
+        }
+
+        res.status(200).json({
+            message: `Batch process completed. Success: ${successCount}, Failed: ${failCount}`,
+            successCount,
+            failCount,
+            errors
+        });
+
+    } catch (error) {
+        console.error('Bulk add users error:', error);
+        res.status(500).json({ message: 'Server error during bulk processing', error: error.message });
+    }
+};

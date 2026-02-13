@@ -318,6 +318,28 @@ export const getStudentStats = async (req, res) => {
             console.error("Error fetching certificates list", e);
         }
 
+        // 10. Fetch Coding Breakdown (Easy, Medium, Hard)
+        let codingBreakdown = { Easy: 0, Medium: 0, Hard: 0 };
+        try {
+            const [breakdownRows] = await db.query(`
+                SELECT q.difficulty, COUNT(DISTINCT s.question_id) as count
+                FROM submissions s
+                JOIN questions q ON s.question_id = q.id
+                WHERE s.user_id = ? AND s.status = 'Accepted'
+                GROUP BY q.difficulty
+            `, [userId]);
+
+            breakdownRows.forEach(row => {
+                // Normalize difficulty (just in case)
+                const diff = row.difficulty.charAt(0).toUpperCase() + row.difficulty.slice(1).toLowerCase();
+                if (codingBreakdown[diff] !== undefined) {
+                    codingBreakdown[diff] = row.count;
+                }
+            });
+        } catch (e) {
+            console.error("Error fetching coding breakdown", e);
+        }
+
         res.json({
             totalMinutes,
             streak,
@@ -332,7 +354,10 @@ export const getStudentStats = async (req, res) => {
             jobsApplied,
             mentorBookings,
             nextSession,
-            certificates // <--- Added this
+            certificates,
+            scenariosSolved: scenariosActive, // Added for Badge View
+            kitsCompleted: kitsActive,        // Added for Badge View
+            codingBreakdown // Added for Donut Chart
         });
 
     } catch (error) {

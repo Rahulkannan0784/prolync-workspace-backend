@@ -49,6 +49,29 @@ export const getAllProjects = async (req, res) => {
         `;
         const [rows] = await db.query(query);
 
+        // Auto-update status based on deadline to ensure consistency
+        const today = new Date().setHours(0, 0, 0, 0);
+        const updates = [];
+
+        for (const p of rows) {
+            if (p.submission_deadline) {
+                const deadline = new Date(p.submission_deadline).setHours(0, 0, 0, 0);
+                const shouldBeClosed = deadline < today;
+
+                if (shouldBeClosed && p.status !== 'Closed') {
+                    updates.push(db.query("UPDATE projects SET status = 'Closed' WHERE id = ?", [p.id]));
+                    p.status = 'Closed'; // Update local object for response
+                } else if (!shouldBeClosed && p.status === 'Closed') {
+                    // Re-open if deadline is extended
+                    updates.push(db.query("UPDATE projects SET status = 'Active' WHERE id = ?", [p.id]));
+                    p.status = 'Active'; // Update local object for response
+                }
+            }
+        }
+
+        // Execute status updates in background (don't block response)
+        if (updates.length > 0) Promise.all(updates).catch(err => console.error("Error syncing project statuses:", err));
+
         const projects = rows.map(project => ({
             ...project,
             technology_stack: typeof project.technology_stack === 'string' ? JSON.parse(project.technology_stack || '[]') : (project.technology_stack || []),
@@ -163,6 +186,7 @@ export const showInterest = async (req, res) => {
 
 export const submitProject = async (req, res) => {
     try {
+        console.log("Submit Project Payload:", req.body);
         const { project_id, email, github_url, live_url, tech_stack_used, submission_notes, screenshots } = req.body;
 
         const [users] = await db.query('SELECT id FROM users WHERE email = ?', [email]);

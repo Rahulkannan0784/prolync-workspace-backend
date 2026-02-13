@@ -309,7 +309,7 @@ export const getMe = async (req, res) => {
             const [hods] = await db.query('SELECT id, name, email, college, department, status FROM hod WHERE id = ?', [req.user.id]);
             if (hods.length > 0) user = hods[0];
         } else {
-            const [users] = await db.query('SELECT id, custom_id, name, email, phone_number, college_name, department, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, gender, current_role, status, valid_until, onboarding_completed FROM users WHERE id = ?', [req.user.id]);
+            const [users] = await db.query('SELECT id, custom_id, name, email, phone_number, college_name, department, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, status, valid_until, onboarding_completed, show_email, show_phone, show_location FROM users WHERE id = ?', [req.user.id]);
             if (users.length > 0) user = users[0];
         }
 

@@ -1,5 +1,16 @@
 import db from '../config/db.js';
 
+const slugify = (text) => {
+    return text
+        .toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]+/g, '')
+        .replace(/--+/g, '-');
+};
+
+
 // Get all jobs (with optional filters)
 export const getAllJobs = async (req, res) => {
     try {
@@ -30,6 +41,41 @@ export const getAllJobs = async (req, res) => {
     }
 };
 
+// Get Single Job by ID
+export const getJobById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const [jobs] = await db.query('SELECT * FROM jobs WHERE job_id = ?', [id]);
+
+        if (jobs.length === 0) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        res.json(jobs[0]);
+    } catch (error) {
+        console.error('Error fetching job:', error);
+        res.status(500).json({ message: 'Server error fetching job' });
+    }
+};
+
+// Get Single Job by Slug
+export const getJobBySlug = async (req, res) => {
+    try {
+        const { slug } = req.params;
+        const [jobs] = await db.query('SELECT * FROM jobs WHERE slug = ?', [slug]);
+
+        if (jobs.length === 0) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        res.json(jobs[0]);
+    } catch (error) {
+        console.error('Error fetching job by slug:', error);
+        res.status(500).json({ message: 'Server error fetching job' });
+    }
+};
+
+
 // Create a new job
 export const createJob = async (req, res) => {
     try {
@@ -42,18 +88,24 @@ export const createJob = async (req, res) => {
 
         const [result] = await db.query(
             `INSERT INTO jobs (
-                job_title, company_name, job_type, work_mode, location,
+                job_title, slug, company_name, job_type, work_mode, location,
                 salary_package, required_skills, job_description,
                 responsibilities, eligibility,
                 application_deadline, application_link, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
-                job_title, company_name, job_type, work_mode, location,
+                job_title, slugify(job_title), company_name, job_type, work_mode, location,
                 salary_package, required_skills, job_description,
                 responsibilities, eligibility,
                 application_deadline, application_link, status || 'Active'
             ]
         );
+
+        // After insert, we can refine the slug with the ID to ensure absolute uniqueness
+        const jobId = result.insertId;
+        const finalSlug = `${jobId}-${slugify(job_title + ' ' + company_name)}`;
+        await db.query('UPDATE jobs SET slug = ? WHERE job_id = ?', [finalSlug, jobId]);
+
 
         const [newJob] = await db.query('SELECT * FROM jobs WHERE job_id = ?', [result.insertId]);
         res.status(201).json(newJob[0]);
@@ -78,21 +130,24 @@ export const updateJob = async (req, res) => {
             application_deadline, application_link, status
         } = req.body;
 
+        const newSlug = `${id}-${slugify(job_title + ' ' + company_name)}`;
+
         await db.query(
             `UPDATE jobs SET
-                job_title = ?, company_name = ?, job_type = ?, work_mode = ?,
+                job_title = ?, slug = ?, company_name = ?, job_type = ?, work_mode = ?,
                 location = ?, salary_package = ?, required_skills = ?,
                 job_description = ?, responsibilities = ?, eligibility = ?,
                 application_deadline = ?, application_link = ?, status = ?
             WHERE job_id = ?`,
             [
-                job_title, company_name, job_type, work_mode, location,
-                salary_package, required_skills, job_description,
+                job_title, newSlug, company_name, job_type, work_mode,
+                location, salary_package, required_skills, job_description,
                 responsibilities, eligibility,
                 application_deadline, application_link, status,
                 id
             ]
         );
+
 
         const [updatedJob] = await db.query('SELECT * FROM jobs WHERE job_id = ?', [id]);
         res.json(updatedJob[0]);

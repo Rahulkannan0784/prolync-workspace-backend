@@ -14,7 +14,8 @@ export const getPublicProfile = async (req, res) => {
         // We include 'email' internally to fetch mentorship data, but we DO NOT expose it in the final response.
         // 1. Fetch User Basics
         const baseColumns = `
-            id, name, email, bio, role, profile_picture, location, github, linkedin, leetcode, hackerrank, codechef, current_role, custom_id, created_at, college_name,
+            id, name, email, phone_number, bio, role, profile_picture, location, github, linkedin, leetcode, hackerrank, codechef, current_role, custom_id, created_at, college_name, department, cgpa, degree,
+            show_email, show_phone, show_location,
             resume_path,
             resume_path as resume_url,
             CASE WHEN resume_path IS NOT NULL AND resume_path != '' THEN TRUE ELSE FALSE END as has_resume
@@ -62,7 +63,9 @@ export const getPublicProfile = async (req, res) => {
             diffRows.forEach(row => {
                 if (row.difficulty) codingBreakdown[row.difficulty] = row.count;
             });
-        } catch (e) { console.warn("Difficulty breakdown fetch failed", e.message); }
+        } catch (e) {
+            console.warn("Difficulty breakdown fetch failed", e.message);
+        }
 
         // Weekly Activity
         let weeklyActivity = [];
@@ -75,7 +78,9 @@ export const getPublicProfile = async (req, res) => {
                 ORDER BY date ASC
             `, [userId]);
             weeklyActivity = activityRows;
-        } catch (e) { console.warn("Weekly activity fetch failed", e.message); }
+        } catch (e) {
+            console.warn("Weekly activity fetch failed", e.message);
+        }
 
         let codingStreak = 0;
         try {
@@ -91,7 +96,9 @@ export const getPublicProfile = async (req, res) => {
                     codingStreak = cStreak[0].current_streak;
                 }
             }
-        } catch (e) { console.warn("Coding streak table missing or error", e.message); }
+        } catch (e) {
+            console.warn("Coding streak table missing or error", e.message);
+        }
 
         // Learning Stats
         const [courseStats] = await db.query(`
@@ -114,7 +121,9 @@ export const getPublicProfile = async (req, res) => {
                     learningStreak = lStreak[0].current_streak;
                 }
             }
-        } catch (e) { console.warn("Learning streak table missing or error", e.message); }
+        } catch (e) {
+            console.warn("Learning streak table missing or error", e.message);
+        }
 
 
         // Learning Time Estimate (Video Only - Formatted)
@@ -136,6 +145,38 @@ export const getPublicProfile = async (req, res) => {
             console.warn("Error calculating video hours:", e.message);
         }
 
+        // Total Active Questions
+        let totalQuestions = { Easy: 0, Medium: 0, Hard: 0 };
+        try {
+            const [totalRows] = await db.query(`
+                SELECT difficulty, COUNT(*) as count 
+                FROM questions 
+                WHERE is_active = TRUE 
+                GROUP BY difficulty
+            `);
+            totalRows.forEach(row => {
+                if (row.difficulty) totalQuestions[row.difficulty] = row.count;
+            });
+        } catch (e) {
+            console.warn("Total questions fetch failed", e.message);
+        }
+
+        // Languages Used Breakdown
+        let languagesUsed = {};
+        try {
+            const [langRows] = await db.query(`
+                SELECT language, COUNT(DISTINCT question_id) as count
+                FROM submissions
+                WHERE user_id = ? AND status = 'Accepted'
+                GROUP BY language
+            `, [userId]);
+            langRows.forEach(row => {
+                languagesUsed[row.language] = row.count;
+            });
+        } catch (e) {
+            console.warn("Languages used fetch failed", e.message);
+        }
+
         const stats = {
             coding_streak: codingStreak,
             learning_streak: learningStreak,
@@ -143,6 +184,8 @@ export const getPublicProfile = async (req, res) => {
             courses_completed: courseStats[0].completed_courses,
             total_learning_hours: totalHours,
             coding_breakdown: codingBreakdown,
+            total_questions: totalQuestions,
+            languages_used: languagesUsed,
             weekly_activity: weeklyActivity
         };
 
@@ -167,7 +210,7 @@ export const getPublicProfile = async (req, res) => {
         let projects = [];
         try {
             const [projRows] = await db.query(`
-                SELECT p.title, p.technology_stack, pa.status
+                SELECT p.title, p.technology_stack, pa.status, pa.github_url, pa.live_url
                 FROM project_applications pa
                 JOIN projects p ON pa.project_id = p.id
                 WHERE pa.student_id = ? AND pa.status IN ('Submitted', 'Approved', 'Completed')
@@ -185,7 +228,9 @@ export const getPublicProfile = async (req, res) => {
                 return {
                     title: p.title,
                     technology_stack: stack,
-                    status: p.status || 'Submitted'
+                    status: p.status || 'Submitted',
+                    github_link: p.github_url,
+                    demo_link: p.live_url
                 };
             });
         } catch (e) {
@@ -208,14 +253,44 @@ export const getPublicProfile = async (req, res) => {
             mentors = mentorRows;
         } catch (e) { console.warn("Mentors fetch failed", e.message); }
 
+        // 6. Fetch Enrolled Courses (New)
+        let enrolledCourses = [];
+        try {
+            const [enrollRows] = await db.query(`
+                SELECT c.title, c.thumbnail, e.progress, e.completed
+                FROM enrollments e
+                JOIN courses c ON e.course_id = c.id
+                WHERE e.user_id = ?
+                ORDER BY e.progress DESC
+                LIMIT 5
+            `, [userId]);
+            enrolledCourses = enrollRows;
+        } catch (e) { console.warn("Enrolled courses fetch failed", e.message); }
+
+        // 7. Fetch Certificates (New)
+        let certificates = [];
+        try {
+            const [certRows] = await db.query(`
+                SELECT c.title as course_title, c.thumbnail as course_thumbnail, cert.issued_at, cert.certificate_code
+                FROM certificates cert
+                JOIN courses c ON cert.course_id = c.id
+                WHERE cert.user_id = ?
+                ORDER BY cert.issued_at DESC
+            `, [userId]);
+            certificates = certRows;
+        } catch (e) { console.warn("Certificates fetch failed", e.message); }
+
         // 6. Construct Response
         const publicProfile = {
             id: userId, // Safe to return ID as it's in the URL
             name: user.name,
             role: user.role, // Student
             bio: user.bio,
-            location: user.location,
+            location: user.show_location ? user.location : null,
             college_name: user.college_name,
+            department: user.department,
+            cgpa: user.cgpa,
+            degree: user.degree,
             profile_picture: user.profile_picture,
             current_role: user.current_role,
             is_verified: true, // You can add logic for verification (e.g. if college_name is present)
@@ -230,8 +305,14 @@ export const getPublicProfile = async (req, res) => {
             badges: badges,
             projects: projects,
             mentors: mentors,
+            enrolled_courses: enrolledCourses,
+            certificates: certificates,
             has_resume: !!user.resume_path, // Boolean flag only
-            resume_url: user.resume_path ? user.resume_path : null // Or separate endpoint to view
+            resume_url: user.resume_path ? user.resume_path : null, // Or separate endpoint to view
+
+            // Conditionally add contact info
+            email: user.show_email ? user.email : null,
+            phone_number: user.show_phone ? user.phone_number : null
         };
 
         res.json(publicProfile);

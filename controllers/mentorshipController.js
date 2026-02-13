@@ -10,6 +10,26 @@ export const bookSession = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
+        // Month-based booking constraint (Limit: 2 sessions per month)
+        const monthStart = new Date();
+        monthStart.setDate(1);
+        monthStart.setHours(0, 0, 0, 0);
+
+        const limitQuery = `
+            SELECT COUNT(*) as monthly_count 
+            FROM mentorship_sessions 
+            WHERE student_email = ? 
+            AND created_at >= ? 
+            AND status != 'Cancelled'
+        `;
+        const [limitCheck] = await db.query(limitQuery, [student_email, monthStart]);
+
+        if (limitCheck[0].monthly_count >= 2) {
+            return res.status(403).json({
+                message: "Monthly booking limit reached. You can book up to 2 sessions per month. Limit resets on the 1st of every month."
+            });
+        }
+
         // Check for existing booking for this mentor at this time
         const checkQuery = `SELECT id FROM mentorship_sessions WHERE mentor_id = ? AND slot_time = ? AND status != 'Cancelled'`;
         const [existing] = await db.query(checkQuery, [mentor_id, slot_time]);

@@ -98,12 +98,23 @@ export const getPlacementBlogById = async (req, res) => {
                 [id]
             );
         } else {
-            // Search by title (decoded)
-            const title = decodeURIComponent(id);
+            // Search by title (decoded) - Try exact match first, then replace underscores with spaces
+            let title = decodeURIComponent(id);
+
+            // First try: Exact match
             [blogs] = await db.query(
                 'SELECT * FROM placement_blogs WHERE title = ?',
                 [title]
             );
+
+            // Second try: Replace underscores with spaces (common URL pattern)
+            if (blogs.length === 0 && title.includes('_')) {
+                const titleWithSpaces = title.replace(/_/g, ' ');
+                [blogs] = await db.query(
+                    'SELECT * FROM placement_blogs WHERE title = ?',
+                    [titleWithSpaces]
+                );
+            }
         }
 
         if (blogs.length === 0) {
@@ -222,7 +233,13 @@ export const incrementPlacementBlogView = async (req, res) => {
             await db.query('UPDATE placement_blogs SET views = views + 1 WHERE id = ?', [id]);
         } else {
             const title = decodeURIComponent(id);
-            await db.query('UPDATE placement_blogs SET views = views + 1 WHERE title = ?', [title]);
+            const [result] = await db.query('UPDATE placement_blogs SET views = views + 1 WHERE title = ?', [title]);
+
+            // If no rows affected (title with underscores didn't match), try replacing underscores with spaces
+            if (result.affectedRows === 0 && title.includes('_')) {
+                const titleWithSpaces = title.replace(/_/g, ' ');
+                await db.query('UPDATE placement_blogs SET views = views + 1 WHERE title = ?', [titleWithSpaces]);
+            }
         }
 
         res.status(200).json({ message: 'View incremented' });

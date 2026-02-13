@@ -1,4 +1,5 @@
 import db from '../config/db.js';
+import badgeService from '../services/badgeService.js';
 
 // Get User Progress for Streak Calendar
 export const getUserProgress = async (req, res) => {
@@ -99,7 +100,7 @@ export const submitSolution = async (req, res) => {
         }
         // --- STREAK LOGIC END ---
 
-        // Badge Awarding Logic (Comprehensive)
+        // Badge Awarding Logic (Automated)
         try {
             // 1. Fetch current stats
             const [statsRes] = await db.query(`
@@ -113,27 +114,19 @@ export const submitSolution = async (req, res) => {
 
             const { totalSolved, scenariosActive, kitsActive } = statsRes[0];
 
-            // Helper to award badge by name
-            const awardBadge = async (badgeName) => {
-                const [badgeRows] = await db.query('SELECT id FROM badges WHERE name = ?', [badgeName]);
-                if (badgeRows.length > 0) {
-                    await db.query('INSERT INTO user_badges (user_id, badge_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE user_id = user_id', [userId, badgeRows[0].id]);
-                }
-            };
+            // 2. Check Triggers via Service
+            await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.PROBLEMS_SOLVED, totalSolved);
 
-            // 2. Check Conditions
-            const checks = [
-                { condition: totalSolved >= 20, badge: 'Bronze Solver' },
-                { condition: totalSolved >= 100, badge: 'Silver Solver' },
-                { condition: totalSolved >= 200, badge: 'Gold Solver' },
-                { condition: scenariosActive >= 10, badge: 'Scenario Master' },
-                { condition: kitsActive >= 1, badge: 'Kit Champion' } // "1 Full Kit" approx to 1 kit active for now
-            ];
+            if (scenariosActive > 0) {
+                await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.SCENARIOS_SOLVED, scenariosActive);
+            }
+            if (kitsActive > 0) {
+                await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.KITS_COMPLETED, kitsActive);
+            }
 
-            for (const check of checks) {
-                if (check.condition) {
-                    await awardBadge(check.badge);
-                }
+            // Check for First Problem (Event Based)
+            if (totalSolved === 1) {
+                await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.FIRST_PROBLEM, 0);
             }
 
         } catch (badgeErr) {
@@ -433,7 +426,7 @@ export const importQuestions = async (req, res) => { // Expects array of questio
                     (item.difficulty || 'Easy').toLowerCase(),
                     item.time_limit || 1,
                     item.memory_limit || 256,
-                    item.status || 'Draft',
+                    item.status || 'Published',
                     JSON.stringify(item.constraints || []),
                     item.category || 'DSA',
                     item.kit_id || null]
@@ -522,21 +515,13 @@ export const getUserCodingStats = async (req, res) => {
 
         // 3. Badges (Auto-award based on stats to sync legacy/manual progress)
         try {
-            const checks = [
-                { condition: totalSolved >= 20, badge: 'Bronze Solver' },
-                { condition: totalSolved >= 100, badge: 'Silver Solver' },
-                { condition: totalSolved >= 200, badge: 'Gold Solver' },
-                { condition: scenarioRows[0].count >= 10, badge: 'Scenario Master' },
-                { condition: kitRows[0].count >= 1, badge: 'Kit Champion' }
-            ];
+            await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.PROBLEMS_SOLVED, totalSolved);
 
-            for (const check of checks) {
-                if (check.condition) {
-                    const [bRows] = await db.query('SELECT id FROM badges WHERE name = ?', [check.badge]);
-                    if (bRows.length > 0) {
-                        await db.query('INSERT IGNORE INTO user_badges (user_id, badge_id) VALUES (?, ?)', [userId, bRows[0].id]);
-                    }
-                }
+            if (scenarioRows[0].count > 0) {
+                await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.SCENARIOS_SOLVED, scenarioRows[0].count);
+            }
+            if (kitRows[0].count > 0) {
+                await badgeService.checkAndAwardBadges(userId, badgeService.TRIGGERS.KITS_COMPLETED, kitRows[0].count);
             }
         } catch (e) {
             console.error("Auto-award badges error", e);
@@ -910,7 +895,7 @@ export const getDailyChallenge = async (req, res) => {
             FROM questions 
             WHERE status = 'Published' AND is_active = TRUE
         `);
-        
+
         const N = countRow[0].total;
         if (N === 0) return res.status(404).json({ message: "No published questions available" });
 
@@ -937,7 +922,7 @@ export const getDailyChallenge = async (req, res) => {
 
         // Enrich with topic name
         const [topicRows] = await db.query('SELECT name FROM topics WHERE id = ?', [qRows[0].topic_id]);
-        
+
         res.json({
             ...qRows[0],
             topic: topicRows[0]?.name || 'General'

@@ -7,7 +7,7 @@ export const getProfile = async (req, res) => {
     try {
         const userId = req.user.id;
         const [users] = await db.query(
-            'SELECT id, name, email, phone_number, college_name, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, onboarding_completed FROM users WHERE id = ?',
+            'SELECT id, name, email, phone_number, college_name, department, cgpa, degree, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, onboarding_completed FROM users WHERE id = ?',
             [userId]
         );
 
@@ -33,8 +33,9 @@ export const updateProfile = async (req, res) => {
         }
 
         const allowedFields = [
-            'name', 'phone_number', 'college_name', 'bio', 'location',
-            'github', 'linkedin', 'leetcode', 'hackerrank', 'codechef', 'gender', 'current_role', 'onboarding_completed'
+            'name', 'phone_number', 'college_name', 'department', 'cgpa', 'degree', 'bio', 'location',
+            'github', 'linkedin', 'leetcode', 'hackerrank', 'codechef', 'gender', 'current_role', 'onboarding_completed',
+            'show_email', 'show_phone', 'show_location'
         ];
 
         let query = 'UPDATE users SET ';
@@ -43,8 +44,15 @@ export const updateProfile = async (req, res) => {
 
         Object.keys(updates).forEach(key => {
             if (allowedFields.includes(key)) {
+                let value = updates[key];
+
+                // Convert empty strings to NULL for nullable fields to avoid "Data truncated" errors
+                if (key === 'gender' && value === '') {
+                    value = null;
+                }
+
                 setClauses.push(`${key} = ?`);
-                params.push(updates[key]);
+                params.push(value);
             }
         });
 
@@ -58,7 +66,7 @@ export const updateProfile = async (req, res) => {
         await db.query(query, params);
 
         // Fetch updated user to return
-        const [updatedUsers] = await db.query('SELECT id, name, email, phone_number, college_name, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, onboarding_completed FROM users WHERE id = ?', [userId]);
+        const [updatedUsers] = await db.query('SELECT id, name, email, phone_number, college_name, department, cgpa, degree, profile_picture, resume_path, role, created_at, bio, location, github, linkedin, leetcode, hackerrank, codechef, gender, current_role, onboarding_completed FROM users WHERE id = ?', [userId]);
 
         res.json({ message: 'Profile updated successfully', user: updatedUsers[0] });
     } catch (error) {

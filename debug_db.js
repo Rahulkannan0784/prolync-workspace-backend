@@ -1,19 +1,23 @@
 
 import db from './config/db.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-async function migrate() {
+async function debugProjects() {
     try {
-        await db.query('ALTER TABLE project_applications ADD COLUMN admin_feedback TEXT DEFAULT NULL');
-        console.log("Column added successfully");
-    } catch (err) {
-        if (err.code === 'ER_DUP_FIELDNAME') {
-            console.log("Column already exists");
-        } else {
-            console.error("Error:", err);
-        }
-    } finally {
+        const [rows] = await db.query(`
+            SELECT id, student_id, project_id, status, github_url, live_url, applied_at 
+            FROM project_applications 
+            ORDER BY applied_at DESC 
+            LIMIT 5
+        `);
+        console.log("Latest Project Applications:");
+        console.table(rows);
         process.exit();
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
     }
 }
 
-migrate();
+debugProjects();

@@ -623,6 +623,64 @@ export const getMetricDetails = async (req, res) => {
             `, [college, department, hodId]);
             data = rows;
 
+        } else if (metric === 'daily_logins_detail') {
+            const { date, period } = req.query; // date in YYYY-MM-DD format
+            if (!date) return res.status(400).json({ message: "Date is required" });
+
+            let dateCondition = "AND DATE(a.created_at) = ?";
+            let queryParams = [college, department, hodId, date];
+
+            if (period === 'weekly') {
+                dateCondition = "AND DATE(a.created_at) BETWEEN ? AND DATE_ADD(?, INTERVAL 6 DAY)";
+                queryParams = [college, department, hodId, date, date];
+            } else if (period === 'monthly') {
+                dateCondition = "AND YEAR(a.created_at) = YEAR(?) AND MONTH(a.created_at) = MONTH(?)";
+                queryParams = [college, department, hodId, date, date];
+            }
+
+            const [rows] = await db.query(`
+                SELECT u.name, u.email, u.profile_picture, 
+                       DATE_FORMAT(MIN(a.created_at), '%H:%i') as first_login_time,
+                       DATE_FORMAT(MIN(a.created_at), '%Y-%m-%d') as login_date,
+                       COUNT(*) as login_count
+                FROM activity_logs a
+                JOIN users u ON a.user_id = u.id
+                WHERE ((u.college_name = ? AND u.department = ?) 
+                   OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
+                AND a.action = 'LOGIN'
+                ${dateCondition}
+                GROUP BY u.id, DATE(a.created_at)
+                ORDER BY MIN(a.created_at) ASC
+            `, queryParams);
+            data = rows;
+
+        } else if (metric === 'daily_submissions_detail') {
+            const { date, period } = req.query; // date in YYYY-MM-DD format
+            if (!date) return res.status(400).json({ message: "Date is required" });
+
+            let dateCondition = "AND DATE(s.created_at) = ?";
+            let queryParams = [college, department, hodId, date];
+
+            if (period === 'weekly') {
+                dateCondition = "AND DATE(s.created_at) BETWEEN ? AND DATE_ADD(?, INTERVAL 6 DAY)";
+                queryParams = [college, department, hodId, date, date];
+            } else if (period === 'monthly') {
+                dateCondition = "AND YEAR(s.created_at) = YEAR(?) AND MONTH(s.created_at) = MONTH(?)";
+                queryParams = [college, department, hodId, date, date];
+            }
+
+            const [rows] = await db.query(`
+                SELECT u.name, u.email, u.profile_picture, 
+                       s.question_id, s.language, s.status,
+                       DATE_FORMAT(s.created_at, '%Y-%m-%d %H:%i') as submission_time
+                FROM submissions s
+                JOIN users u ON s.user_id = u.id
+                WHERE ((u.college_name = ? AND u.department = ?) 
+                   OR (u.id IN (SELECT student_id FROM hod_student_mapping WHERE hod_id = ?)))
+                ${dateCondition}
+                ORDER BY s.created_at ASC
+            `, queryParams);
+            data = rows;
         }
 
         res.json(data);
