@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProgress, submitSolution, getUserCodingStats, getQuestions, getQuestionById, getDailyChallenge, createQuestion, updateQuestion, deleteQuestion, importQuestions, getQuestionAnalytics, getPlatformAnalytics, getTopics, getKits, createKit, updateKit, deleteKit } from '../controllers/codingController.js';
+import { executeCode, getUserProgress, submitSolution, getUserCodingStats, getQuestions, getQuestionById, getDailyChallenge, createQuestion, updateQuestion, deleteQuestion, importQuestions, getQuestionAnalytics, getPlatformAnalytics, getTopics, getKits, createKit, updateKit, deleteKit } from '../controllers/codingController.js';
 import { protect as authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();

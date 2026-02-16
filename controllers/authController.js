@@ -12,6 +12,9 @@ const getRole = (email) => {
 
 export const register = async (req, res) => {
     let { name, email, password } = req.body;
+    if (!email || !name || !password) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
     email = email.trim(); // Trim input email
     name = name.trim();
 
@@ -158,6 +161,9 @@ export const verifyAdminOtp = async (req, res) => {
 
 export const login = async (req, res) => {
     let { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
+    }
     email = email.trim(); // Trim input email
     try {
         // Check admin table FIRST

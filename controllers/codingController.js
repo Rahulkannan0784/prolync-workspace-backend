@@ -1,5 +1,77 @@
 import db from '../config/db.js';
 import badgeService from '../services/badgeService.js';
+import axios from 'axios';
+
+// Judge0 Language IDs Mapping
+const JUDGE0_LANG_MAP = {
+    'python': 71,   // Python (3.8.1)
+    'cpp': 54,      // C++ (GCC 9.2.0)
+    'java': 62,     // Java (OpenJDK 13.0.1)
+    'javascript': 63 // JavaScript (Node.js 12.14.0)
+};
+
+// Execute Code via Judge0 (RapidAPI)
+export const executeCode = async (req, res) => {
+    try {
+        const { language, sourceCode, stdin } = req.body;
+
+        const langId = JUDGE0_LANG_MAP[language] || 71; // Default to Python
+        const apiKey = process.env.RAPID_API_KEY;
+        const apiHost = process.env.RAPID_API_HOST || 'judge0-ce.p.rapidapi.com';
+
+        if (!apiKey) {
+            return res.status(500).json({ message: "Judge0 API Key missing in server configuration." });
+        }
+
+        console.log('--- Judge0 Request ---');
+        console.log('Language:', language, 'ID:', langId);
+
+        try {
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-RapidAPI-Key': apiKey,
+                'X-RapidAPI-Host': apiHost
+            };
+
+            // Using wait=true for Run (single case) to keep it simple
+            const response = await axios.post(`https://${apiHost}/submissions?base64_encoded=false&wait=true`, {
+                language_id: langId,
+                source_code: sourceCode,
+                stdin: stdin || ""
+            }, { headers });
+
+            console.log('Judge0 Success:', response.status);
+
+            // Let's return raw Judge0 for now but wrap it.
+            res.json({
+                run: {
+                    stdout: response.data.stdout,
+                    stderr: response.data.stderr,
+                    compile_output: response.data.compile_output,
+                    output: (response.data.stdout || "") + (response.data.stderr || "") + (response.data.compile_output || ""),
+                    message: response.data.message,
+                    code: response.data.status?.id === 3 ? 0 : 1, // Status 3 is "Accepted"
+                    status: response.data.status,
+                    time: response.data.time,
+                    memory: response.data.memory
+                }
+            });
+        } catch (error) {
+            if (error.response) {
+                console.error('Judge0 Error Response:', error.response.status, error.response.data);
+                return res.status(error.response.status).json({
+                    message: "Judge0 API Error: " + (error.response.data?.message || "Internal Error"),
+                    judge0Status: error.response.status,
+                    judge0Data: error.response.data
+                });
+            }
+            throw error;
+        }
+    } catch (error) {
+        console.error('Judge0 Proxy Error:', error.message);
+        res.status(500).json({ message: "Internal server error during code execution proxy." });
+    }
+};
 
 // Get User Progress for Streak Calendar
 export const getUserProgress = async (req, res) => {
@@ -28,20 +100,86 @@ export const getUserProgress = async (req, res) => {
     }
 };
 
-// Submit Solution (for Instant Updates)
+// Submit Solution (Secure Backend Judge)
 export const submitSolution = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { questionId, code, language, status, output, contextType = 'problem', contextId = null } = req.body;
+        const { questionId, code, language, contextType = 'problem', contextId = null } = req.body;
 
+        // 1. Fetch Question & Test Cases
+        const [qRows] = await db.query('SELECT time_limit, memory_limit FROM questions WHERE id = ?', [questionId]);
+        if (qRows.length === 0) return res.status(404).json({ message: 'Question not found' });
 
+        const [tcRows] = await db.query('SELECT input, expected_output, is_hidden FROM test_cases WHERE question_id = ?', [questionId]);
+        if (tcRows.length === 0) return res.status(400).json({ message: 'No test cases found for this question' });
 
+        const langId = JUDGE0_LANG_MAP[language] || 71;
+        const apiKey = process.env.RAPID_API_KEY;
+        const apiHost = process.env.RAPID_API_HOST || 'judge0-ce.p.rapidapi.com';
+
+        let overallStatus = 'Accepted';
+        let firstFailure = null;
+
+        console.log(`--- Secure Submit for User ${userId}, Question ${questionId} ---`);
+
+        // 2. Execute against all test cases
+        // Note: For production with many cases, use Batch Submissions. 
+        // For simplicity here, we iterate.
+        for (let i = 0; i < tcRows.length; i++) {
+            const tc = tcRows[i];
+
+            try {
+                const response = await axios.post(`https://${apiHost}/submissions?base64_encoded=false&wait=true`, {
+                    language_id: langId,
+                    source_code: code,
+                    stdin: tc.input || "",
+                    expected_output: tc.expected_output || "",
+                    cpu_time_limit: qRows[0].time_limit || 2,
+                    memory_limit: (qRows[0].memory_limit || 256) * 1024
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-RapidAPI-Key': apiKey,
+                        'X-RapidAPI-Host': apiHost
+                    }
+                });
+
+                const status = response.data.status;
+                // Status IDs: 3=Accepted, 4=Wrong Answer, 5=TLE, 6=Compilation Error, 7-12=Runtime Errors
+                if (status.id !== 3) {
+                    overallStatus = status.description; // e.g., "Wrong Answer", "Time Limit Exceeded"
+                    firstFailure = {
+                        testCaseIndex: i,
+                        input: tc.is_hidden ? "[Hidden Case]" : tc.input,
+                        expected: tc.is_hidden ? "[Hidden Case]" : tc.expected_output,
+                        actual: tc.is_hidden ? "Encrypted Output" : response.data.stdout,
+                        error: response.data.stderr || response.data.message || status.description
+                    };
+                    break; // Stop on first failure
+                }
+            } catch (err) {
+                console.error(`Judge0 Err on TC ${i}:`, err.message);
+                overallStatus = 'Internal Error';
+                break;
+            }
+        }
+
+        // 3. Save submission
         const query = `
             INSERT INTO submissions (user_id, question_id, code, language, status, output, context_type, context_id)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
-        const [result] = await db.query(query, [userId, questionId, code, language, status, output, contextType, contextId]);
+        const [result] = await db.query(query, [
+            userId,
+            questionId,
+            code,
+            language,
+            overallStatus,
+            firstFailure ? JSON.stringify(firstFailure) : "All test cases passed",
+            contextType,
+            contextId
+        ]);
 
 
         // --- STREAK LOGIC START ---
@@ -134,8 +272,10 @@ export const submitSolution = async (req, res) => {
         }
 
         res.status(201).json({
-            message: 'Solution submitted successfully',
+            message: 'Solution processed',
             submissionId: result.insertId,
+            status: overallStatus,
+            output: firstFailure ? JSON.stringify(firstFailure) : "All test cases passed",
             streak: updatedStreak
         });
     } catch (error) {

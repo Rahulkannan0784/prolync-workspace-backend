@@ -30,6 +30,8 @@ import publicProfileRoutes from './routes/publicProfileRoutes.js';
 import hodRoutes from './routes/hodRoutes.js';
 import hodAssignmentRoutes from './routes/hodAssignmentRoutes.js';
 import badgeRoutes from './routes/badgeRoutes.js';
+import { executeCode } from './controllers/codingController.js';
+import { protect as authMiddleware } from './middleware/authMiddleware.js';
 
 dotenv.config();
 
@@ -111,6 +113,9 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/public/profile', publicProfileRoutes);
 app.use('/api/badges', badgeRoutes);
 
+
+app.post('/api/execute', executeCode);
+
 // ...
 
 app.use('/api/contact', contactRoutes);
@@ -161,6 +166,9 @@ const fixSchema = async () => {
 
     // User onboarding completion fix
     try { await db.query("ALTER TABLE users ADD COLUMN onboarding_completed BOOLEAN DEFAULT FALSE"); } catch (e) { }
+
+    // Badges table fixes
+    try { await db.query("ALTER TABLE badges ADD COLUMN is_active BOOLEAN DEFAULT TRUE"); } catch (e) { }
 
     console.log("Schema Fix Done.");
   } catch (e) {
